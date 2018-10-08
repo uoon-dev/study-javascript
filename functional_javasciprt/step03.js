@@ -64,6 +64,26 @@ function _filter(list, predi) {
     return new_list;
 }
 
+const slice = Array.prototype.slice;
+function _rest(list, num) {
+    return slice.call(list, num || 1);
+}
+
+function _reduce(list, iter, memo) {
+    if (arguments.length === 2) {
+        memo = list[0];
+        // 이 경우 list가 배열이어야만 가능하다는 문제점이 있다.
+        // -> const slice = Array.prototype.slice;
+        // -> slice.call(list, 1); 이렇게 하면 list가 배열이 아니어도 배열을 리턴해주게 된다.
+        list = _rest(list);
+    }
+    _each(list, function(val) {
+        memo = iter(memo, val);
+    })
+    return memo;
+// iter(iter(iter(0, 1), 2), 3);
+}
+
 
 /**
  * 1. 수집하기
@@ -170,3 +190,39 @@ console.log(_some([false]))
 console.log(_some(users, user => user.age > 20))
 console.log(_every([1, 2, 5, 10, 20], val => val > 0));
 console.log(_every([1, 2, 5, 10, 20]));
+
+
+/**
+ *  4. 접기 - reduce
+ */
+
+function _min(data) {
+    return _reduce(data, (a, b) => a < b ? a : b)
+}
+
+function _max(data) {
+    return _reduce(data, (a, b) => a > b ? a : b)
+}
+
+console.log(_min([1, 2, 4, 10, 5, -4]));
+console.log(_max([1, 2, 4, 10, 5, -4]));
+
+
+function _min_by(data, iter) {
+    return _reduce(data, (a, b) => iter(a) < iter(b) ? a : b)
+}
+
+function _max_by(data, iter) {
+    return _reduce(data, (a, b) => iter(a) > iter(b) ? a : b)
+}
+
+console.log(
+    _min_by([1, 2, 4, 10, 5, -4], Math.abs)
+)
+console.log(
+    _max_by([1, 2, 4, 10, 5, -4, -11], Math.abs)
+)
+
+console.log(
+    _max_by(users, user => user.age)
+)
