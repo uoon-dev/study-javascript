@@ -153,3 +153,20 @@ console.log(
 console.log(
     _find_index(users, user => user.age === 23)
 )
+
+
+// some
+function _some(data, predi) {
+    return _find_index(data, predi || _identity) != -1;
+}
+
+// every
+function _every(data, predi) {
+    return _find_index(data, _negate(predi || _identity)) === -1;
+}
+
+console.log(_some([1, 2, 5, 10, 20], val => val > 10))
+console.log(_some([false]))
+console.log(_some(users, user => user.age > 20))
+console.log(_every([1, 2, 5, 10, 20], val => val > 0));
+console.log(_every([1, 2, 5, 10, 20]));
