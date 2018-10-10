@@ -30,15 +30,15 @@ const _get = _curryr(function (obj, key) {
 function _each(list, iter) {
     const keys = _keys(list);
     for (let i = 0; i < keys.length; i++) {
-        iter(list[keys[i]]);
+        iter(list[keys[i]], keys[i]);
     }
     return list;
 }
 
 function _map(list, mapper) {
     let new_list = [];
-    _each(list, (val) => {
-        new_list.push(mapper(val));
+    _each(list, (val, key) => {
+        new_list.push(mapper(val), key);
     })
     // for (let i = 0; i < list.length; i++) {
     //     new_list.push(mapper(list[i]))
@@ -226,3 +226,73 @@ console.log(
 console.log(
     _max_by(users, user => user.age)
 )
+
+// console.log(
+//     _go(users,
+//         _filter(user => user.age >= 20),
+//         _min_by(user => user.age)
+//     )
+// )
+
+
+/**
+ * 5. group_by
+ */
+const users2 = [
+    {
+        name: 'Max',
+        age: 16
+    },
+    {
+        name: 'Hage',
+        age: 23
+    },
+    {
+        name: 'Anago',
+        age: 16
+    },
+    {
+        name: 'Jobis',
+        age: 23
+    },
+    {
+        name: 'Solid',
+        age: 16
+    },
+    {
+        name: 'Asset',
+        age: 23
+    }
+]
+
+function _push(obj, key, val) {
+    (obj[key] = obj[key] || []).push(val);
+    return obj;
+}
+
+const _group_by = (data, iter) => 
+    _reduce(data, (grouped, val) => 
+        _push(grouped, iter(val), val)
+        // (grouped[key] = grouped[key] || []).push(val);
+    , {})
+
+console.log(_group_by(users2, user => user.age))
+
+
+
+/**
+ *  6. count_by
+ */
+
+const _inc = (count, key) => {
+    count[key] = count[key] ? count[key]++ : 1;
+    return count;
+}
+
+const _count_by = (data, iter) =>
+    _reduce(data, (count, val) => 
+        _inc(count, iter(val)), {});
+
+console.log(_count_by(users2, user => user.age - user.age % 10));
+
+const _pairs = _map((val, key) => [key, val]);
