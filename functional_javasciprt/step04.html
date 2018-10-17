@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>4. 자바스크립트에서의 지연 평가</title>
+    <script src="partial.min.js"></script>
+</head>
+<body>
+    
+<script>
+var i = 0;
+
+_.go(
+    _.range(100),
+    _.map(val => {
+        ++i;
+        return val * val
+    }),
+    _.filter(val => val % 2),
+    console.log
+)
+
+console.log(i);
+</script>
+</body>
+</html> 
